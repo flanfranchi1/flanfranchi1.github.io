@@ -1,17 +1,748 @@
----
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Fernando Lanfranchi – Consultor em melhoria de processos, automação e dados para pequenas e médias empresas." />
+  <title>Fernando Lanfranchi | Processos, Automação e Dados</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
 
----
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+    :root {
+      --ink:        #0f1117;
+      --ink-soft:   #3a3d48;
+      --ink-muted:  #767b8a;
+      --canvas:     #f5f4f0;
+      --white:      #ffffff;
+      --accent:     #1a6b3c;
+      --accent-lt:  #d6ede2;
+      --accent-dk:  #124d2c;
+      --line:       #e0ddd7;
+      --wa:         #25D366;
+      --wa-dk:      #128C7E;
+
+      --ff-head: 'Syne', sans-serif;
+      --ff-body: 'DM Sans', sans-serif;
+
+      --section-pad: clamp(4rem, 8vw, 7rem);
+      --max-w: 860px;
+      --radius: 4px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--ff-body);
+      background: var(--canvas);
+      color: var(--ink);
+      font-size: clamp(1rem, 1.05vw + .6rem, 1.125rem);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Utility ── */
+    .container {
+      width: min(var(--max-w), 100% - 2.5rem);
+      margin-inline: auto;
+    }
+
+    .label {
+      font-family: var(--ff-head);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    section { padding-block: var(--section-pad); }
+
+    hr.divider {
+      border: none;
+      border-top: 1px solid var(--line);
+      margin-block: 0;
+    }
+
+    /* ── Fade-in on scroll ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ══════════════════════════════
+       NAV
+    ══════════════════════════════ */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--canvas);
+      border-bottom: 1px solid var(--line);
+      padding-block: 1rem;
+    }
+
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .nav-brand {
+      font-family: var(--ff-head);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -.01em;
+    }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: var(--wa);
+      color: #fff;
+      font-family: var(--ff-body);
+      font-weight: 500;
+      font-size: .85rem;
+      text-decoration: none;
+      padding: .45rem 1rem;
+      border-radius: 2rem;
+      transition: background .2s, transform .2s;
+      white-space: nowrap;
+    }
+    .nav-cta:hover { background: var(--wa-dk); transform: translateY(-1px); }
+    .nav-cta svg { flex-shrink: 0; }
+
+    /* ══════════════════════════════
+       HERO
+    ══════════════════════════════ */
+    #hero {
+      padding-block: clamp(5rem, 12vw, 9rem);
+      background: var(--ink);
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* subtle grid texture */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+
+    #hero .label { color: var(--accent-lt); margin-bottom: 1.5rem; }
+
+    #hero h1 {
+      font-family: var(--ff-head);
+      font-size: clamp(2rem, 4vw + .8rem, 3.25rem);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -.03em;
+      max-width: 720px;
+      margin-bottom: 1.75rem;
+    }
+
+    #hero h1 em {
+      font-style: normal;
+      color: var(--accent-lt);
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 1.2vw + .5rem, 1.2rem);
+      color: rgba(255,255,255,.72);
+      max-width: 580px;
+      line-height: 1.65;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn-wa {
+      display: inline-flex;
+      align-items: center;
+      gap: .65rem;
+      background: var(--wa);
+      color: #fff;
+      font-family: var(--ff-body);
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      padding: .85rem 1.75rem;
+      border-radius: 2rem;
+      transition: background .2s, transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 20px rgba(37,211,102,.3);
+    }
+    .btn-wa:hover {
+      background: var(--wa-dk);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(37,211,102,.4);
+    }
+    .btn-wa:focus-visible {
+      outline: 3px solid var(--wa);
+      outline-offset: 3px;
+    }
+
+    /* ══════════════════════════════
+       PROBLEMAS
+    ══════════════════════════════ */
+    #problemas { background: var(--white); }
+
+    #problemas h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(1.5rem, 2.5vw + .5rem, 2rem);
+      font-weight: 700;
+      letter-spacing: -.02em;
+      margin-bottom: 2.5rem;
+      max-width: 560px;
+    }
+
+    .problems-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+      gap: 1rem;
+    }
+
+    .problem-card {
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 1.1rem 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .problem-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 2px 12px rgba(26,107,60,.08);
+    }
+
+    .problem-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: .15rem;
+    }
+
+    .problem-card p {
+      font-size: .93rem;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+
+    /* ══════════════════════════════
+       COMO AJUDO
+    ══════════════════════════════ */
+    #ajuda { background: var(--canvas); }
+
+    #ajuda h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(1.5rem, 2.5vw + .5rem, 2rem);
+      font-weight: 700;
+      letter-spacing: -.02em;
+      margin-bottom: 2.5rem;
+      max-width: 560px;
+    }
+
+    .help-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .help-step {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 1.25rem;
+      padding-block: 2rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .help-step:last-child { border-bottom: none; }
+
+    .step-num {
+      font-family: var(--ff-head);
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: var(--accent);
+      padding-top: .1rem;
+      line-height: 1;
+    }
+
+    .step-body h3 {
+      font-family: var(--ff-head);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: .4rem;
+      letter-spacing: -.01em;
+    }
+
+    .step-body p {
+      color: var(--ink-soft);
+      font-size: .96rem;
+    }
+
+    /* ══════════════════════════════
+       CASOS
+    ══════════════════════════════ */
+    #casos { background: var(--white); }
+
+    #casos h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(1.5rem, 2.5vw + .5rem, 2rem);
+      font-weight: 700;
+      letter-spacing: -.02em;
+      margin-bottom: 2.5rem;
+      max-width: 560px;
+    }
+
+    .cases-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .case-item {
+      background: var(--canvas);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      padding: 1.25rem 1.5rem;
+      transition: border-left-width .2s;
+    }
+    .case-item:hover { border-left-width: 5px; }
+
+    .case-item p {
+      color: var(--ink-soft);
+      font-size: .96rem;
+      line-height: 1.6;
+    }
+
+    .case-item strong { color: var(--ink); font-weight: 500; }
+
+    /* ══════════════════════════════
+       SOBRE
+    ══════════════════════════════ */
+    #sobre { background: var(--canvas); }
+
+    .sobre-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    @media (min-width: 640px) {
+      .sobre-inner {
+        grid-template-columns: 1fr 2fr;
+        align-items: start;
+        gap: 3.5rem;
+      }
+    }
+
+    .sobre-badge {
+      background: var(--ink);
+      color: var(--white);
+      padding: 2rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .sobre-badge .name {
+      font-family: var(--ff-head);
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -.02em;
+      margin-bottom: .25rem;
+    }
+
+    .sobre-badge .role {
+      font-size: .8rem;
+      color: rgba(255,255,255,.6);
+      line-height: 1.4;
+    }
+
+    .badge-logos {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
+
+    .badge-logo {
+      font-family: var(--ff-head);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      padding: .35rem .6rem;
+      background: rgba(255,255,255,.07);
+      border-radius: 3px;
+      color: rgba(255,255,255,.8);
+    }
+
+    #sobre h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(1.4rem, 2vw + .5rem, 1.8rem);
+      font-weight: 700;
+      letter-spacing: -.02em;
+      margin-bottom: 1.25rem;
+    }
+
+    #sobre p {
+      color: var(--ink-soft);
+      margin-bottom: 1rem;
+    }
+    #sobre p:last-child { margin-bottom: 0; }
+
+    /* ══════════════════════════════
+       CTA FINAL
+    ══════════════════════════════ */
+    #cta {
+      background: var(--ink);
+      color: var(--white);
+      text-align: center;
+    }
+
+    #cta h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(1.5rem, 3vw + .5rem, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      line-height: 1.2;
+      max-width: 640px;
+      margin-inline: auto;
+      margin-bottom: 1.5rem;
+    }
+
+    #cta h2 em {
+      font-style: normal;
+      color: var(--accent-lt);
+    }
+
+    #cta p {
+      color: rgba(255,255,255,.65);
+      max-width: 480px;
+      margin-inline: auto;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ══════════════════════════════
+       FOOTER
+    ══════════════════════════════ */
+    footer {
+      background: #09100d;
+      color: rgba(255,255,255,.35);
+      text-align: center;
+      padding-block: 1.5rem;
+      font-size: .8rem;
+    }
+
+    /* ══════════════════════════════
+       FLOATING WA BUTTON
+    ══════════════════════════════ */
+    .float-wa {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 200;
+      background: var(--wa);
+      color: #fff;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,.45);
+      text-decoration: none;
+      transition: transform .2s, background .2s;
+    }
+    .float-wa:hover { transform: scale(1.08); background: var(--wa-dk); }
+    .float-wa:focus-visible { outline: 3px solid var(--wa); outline-offset: 3px; }
+
+    /* pulse ring */
+    .float-wa::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid var(--wa);
+      animation: pulse 2.5s ease-out infinite;
+    }
+
+    @keyframes pulse {
+      0%   { transform: scale(1);   opacity: .7; }
+      70%  { transform: scale(1.55); opacity: 0; }
+      100% { transform: scale(1.55); opacity: 0; }
+    }
+
+    /* ══════════════════════════════
+       RESPONSIVE TWEAKS
+    ══════════════════════════════ */
+    @media (max-width: 480px) {
+      .nav-brand { font-size: .9rem; }
+      .help-step { grid-template-columns: 38px 1fr; gap: 1rem; }
+    }
+
+    /* ── Focus styles ── */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav aria-label="Navegação principal">
+    <div class="container">
+      <a href="#" class="nav-brand" aria-label="Voltar ao início">Fernando Lanfranchi</a>
+      <a href="https://wa.me/5511960934329" target="_blank" rel="noopener noreferrer" class="nav-cta" aria-label="Abrir conversa no WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.562 4.14 1.543 5.877L.057 23.998l6.278-1.467A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.034-1.388l-.361-.214-3.727.872.936-3.617-.235-.373A9.818 9.818 0 112 12c0-5.422 4.396-9.818 9.818-9.818S21.818 6.578 21.818 12 17.422 21.818 12 21.818z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section id="hero" aria-labelledby="hero-heading">
+    <div class="container">
+      <p class="label reveal">Consultor Independente</p>
+      <h1 id="hero-heading" class="reveal" style="transition-delay:.1s">
+        Ajudo sua equipe a gastar menos tempo com<br>
+        <em>tarefas operacionais</em><br>
+        e mais tempo gerando resultados
+      </h1>
+      <p class="hero-sub reveal" style="transition-delay:.2s">
+        Processos, automação e dados para pequenas e médias empresas que querem crescer sem aumentar o esforço operacional.
+      </p>
+      <a href="https://wa.me/5511960934329" target="_blank" rel="noopener noreferrer" class="btn-wa reveal" style="transition-delay:.3s" aria-label="Conversar com Fernando pelo WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.562 4.14 1.543 5.877L.057 23.998l6.278-1.467A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.034-1.388l-.361-.214-3.727.872.936-3.617-.235-.373A9.818 9.818 0 112 12c0-5.422 4.396-9.818 9.818-9.818S21.818 6.578 21.818 12 17.422 21.818 12 21.818z"/></svg>
+        Conversar pelo WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── PROBLEMAS ── -->
+  <section id="problemas" aria-labelledby="problemas-heading">
+    <div class="container">
+      <p class="label reveal">Situações que reconheço</p>
+      <h2 id="problemas-heading" class="reveal" style="transition-delay:.1s">Sua equipe enfrenta algum desses problemas?</h2>
+      <div class="problems-grid" role="list">
+
+        <div class="problem-card reveal" role="listitem" style="transition-delay:.1s">
+          <svg class="problem-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <p>Conciliações manuais que tomam horas dos analistas</p>
+        </div>
+
+        <div class="problem-card reveal" role="listitem" style="transition-delay:.15s">
+          <svg class="problem-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <p>Relatórios complexos montados manualmente todo mês</p>
+        </div>
+
+        <div class="problem-card reveal" role="listitem" style="transition-delay:.2s">
+          <svg class="problem-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <p>Planilhas que só o criador consegue mexer (VBA, fórmulas escondidas)</p>
+        </div>
+
+        <div class="problem-card reveal" role="listitem" style="transition-delay:.25s">
+          <svg class="problem-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <p>Falta de indicadores confiáveis para tomar decisões</p>
+        </div>
+
+        <div class="problem-card reveal" role="listitem" style="transition-delay:.3s">
+          <svg class="problem-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <p>Dados espalhados em sistemas e relatórios diferentes sem integração</p>
+        </div>
+
+        <div class="problem-card reveal" role="listitem" style="transition-delay:.35s">
+          <svg class="problem-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <p>Processos manuais repetitivos que ninguém tem tempo de automatizar</p>
+        </div>
+
+        <div class="problem-card reveal" role="listitem" style="transition-delay:.4s">
+          <svg class="problem-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <p>Equipe tão afogada no operacional que não consegue pensar estrategicamente</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── COMO AJUDO ── -->
+  <section id="ajuda" aria-labelledby="ajuda-heading">
+    <div class="container">
+      <p class="label reveal">Minha abordagem</p>
+      <h2 id="ajuda-heading" class="reveal" style="transition-delay:.1s">Como posso ajudar</h2>
+
+      <div class="help-steps">
+
+        <div class="help-step reveal" style="transition-delay:.1s">
+          <div class="step-num" aria-hidden="true">01</div>
+          <div class="step-body">
+            <h3>Mapeamento e diagnóstico</h3>
+            <p>Mapeio e identifico dentro dos processos atuais quais são os que demandam maior esforço, impactando na produtividade dos times. Entendo o contexto antes de propor qualquer solução.</p>
+          </div>
+        </div>
+
+        <div class="help-step reveal" style="transition-delay:.2s">
+          <div class="step-num" aria-hidden="true">02</div>
+          <div class="step-body">
+            <h3>Identificação de oportunidades</h3>
+            <p>Identifico oportunidades para reduzir atividades repetitivas e liberar tempo para tarefas de maior valor. Priorizo o que gera impacto real com o menor esforço possível.</p>
+          </div>
+        </div>
+
+        <div class="help-step reveal" style="transition-delay:.3s">
+          <div class="step-num" aria-hidden="true">03</div>
+          <div class="step-body">
+            <h3>Desenvolvimento e implementação</h3>
+            <p>Desenvolvo e implemento ferramentas para auxiliar na captura, tratamento de dados e formulação de relatórios e painéis que apoiam e embasam decisões estratégicas.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── CASOS ── -->
+  <section id="casos" aria-labelledby="casos-heading">
+    <div class="container">
+      <p class="label reveal">Resultados concretos</p>
+      <h2 id="casos-heading" class="reveal" style="transition-delay:.1s">Casos e experiências</h2>
+
+      <div class="cases-list">
+
+        <article class="case-item reveal" style="transition-delay:.1s">
+          <p><strong>Automação de fluxo de crédito</strong> — antes integralmente manual, passou a decidir 70% dos 6.000 pedidos mensais de uma pequena indústria, liberando os analistas para se concentrar nos casos mais complexos com mais qualidade.</p>
+        </article>
+
+        <article class="case-item reveal" style="transition-delay:.15s">
+          <p><strong>Geração automatizada de aditivos contratuais</strong> em escala de centenas de milhares, sem qualquer investimento relevante em infraestrutura ou licenciamento.</p>
+        </article>
+
+        <article class="case-item reveal" style="transition-delay:.2s">
+          <p><strong>Relatórios que consumiam 3 dias de um analista</strong> foram reduzidos para 30 minutos por meio de automação e simplificação do processo de coleta e tratamento de dados.</p>
+        </article>
+
+        <article class="case-item reveal" style="transition-delay:.25s">
+          <p><strong>Extração de dados em tela</strong> para criação de banco de dados estruturado, transformando informação analítica dispersa em visão gerencial consolidada e acionável.</p>
+        </article>
+
+        <article class="case-item reveal" style="transition-delay:.3s">
+          <p><strong>Extração e tabulação de múltiplos formatos</strong> (PDF, TXT, XLSX, DOCX e outros formatos exóticos) para cruzamento de bases e geração de relatórios automatizados.</p>
+        </article>
+
+        <article class="case-item reveal" style="transition-delay:.35s">
+          <p><strong>Desenvolvimento de política e cultura de crédito</strong> para trazer objetividade às negociações entre áreas com interesses conflitantes, reduzindo atritos e melhorando a qualidade das decisões.</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── SOBRE ── -->
+  <section id="sobre" aria-labelledby="sobre-heading">
+    <div class="container">
+      <div class="sobre-inner">
+
+        <aside class="sobre-badge reveal" aria-label="Informações sobre Fernando Lanfranchi">
+          <div class="name">Fernando Lanfranchi</div>
+          <div class="role">Processos · Automação · Dados</div>
+          <div class="badge-logos" aria-label="Empresas onde trabalhou">
+            <div class="badge-logo">Itaú</div>
+            <div class="badge-logo">Nubank</div>
+            <div class="badge-logo">Cielo</div>
+          </div>
+        </aside>
+
+        <div>
+          <p class="label reveal">Trajetória</p>
+          <h2 id="sobre-heading" class="reveal" style="transition-delay:.1s">Sobre mim</h2>
+          <p class="reveal" style="transition-delay:.15s">
+            Construí minha carreira em empresas como Itaú, Nubank e Cielo, atuando na interseção entre operações, dados, crédito e tecnologia.
+          </p>
+          <p class="reveal" style="transition-delay:.2s">
+            Nessas oportunidades, desenvolvi soluções que reduziram esforço operacional, melhoraram processos decisórios e transformaram dados em informação para gestão.
+          </p>
+          <p class="reveal" style="transition-delay:.25s">
+            Hoje, como consultor independente, levo essa experiência para pequenas e médias empresas que querem ganhar eficiência sem precisar de grandes investimentos ou equipes técnicas internas.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── CTA FINAL ── -->
+  <section id="cta" aria-labelledby="cta-heading">
+    <div class="container">
+      <p class="label reveal" style="color: var(--accent-lt);">Bora conversar?</p>
+      <h2 id="cta-heading" class="reveal" style="transition-delay:.1s">
+        Se você sente que a sobrecarga operacional está <em>amarrando o seu crescimento</em>, vamos bater um papo sem compromisso
+      </h2>
+      <p class="reveal" style="transition-delay:.2s">
+        Quem sabe não resolvemos isso juntos?
+      </p>
+      <a href="https://wa.me/5511960934329" target="_blank" rel="noopener noreferrer" class="btn-wa reveal" style="transition-delay:.3s" aria-label="Iniciar conversa com Fernando pelo WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.562 4.14 1.543 5.877L.057 23.998l6.278-1.467A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.034-1.388l-.361-.214-3.727.872.936-3.617-.235-.373A9.818 9.818 0 112 12c0-5.422 4.396-9.818 9.818-9.818S21.818 6.578 21.818 12 17.422 21.818 12 21.818z"/></svg>
+        Conversar pelo WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <p>© 2025 Fernando Lanfranchi · Consultor independente em processos, automação e dados</p>
+  </footer>
+
+  <!-- ── FLOATING WA BUTTON ── -->
+  <a href="https://wa.me/5511960934329" target="_blank" rel="noopener noreferrer" class="float-wa" aria-label="Abrir WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.562 4.14 1.543 5.877L.057 23.998l6.278-1.467A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.034-1.388l-.361-.214-3.727.872.936-3.617-.235-.373A9.818 9.818 0 112 12c0-5.422 4.396-9.818 9.818-9.818S21.818 6.578 21.818 12 17.422 21.818 12 21.818z"/></svg>
+  </a>
+
+  <!-- ── SCROLL REVEAL SCRIPT ── -->
+  <script>
+    (function () {
+      const els = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        els.forEach(el => el.classList.add('visible'));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      els.forEach(el => io.observe(el));
+    })();
+  </script>
+</body>
 </html>
